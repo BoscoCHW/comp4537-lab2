@@ -30,8 +30,9 @@ app.post("/chatbot", (req, res) => {
   }
 });
 
+app.get("/", (req, res) => res.send("Hello World!"));
 
-app.get("/health", (req, res) => res.send(200));
+app.get("/health", (req, res) => res.sendStatus(200));
 
 const PORT = 3000;
 app.listen(PORT, () => {
