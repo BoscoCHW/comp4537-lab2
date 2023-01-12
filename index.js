@@ -1,11 +1,13 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const fetch = require("node-fetch");
+const urlencodedParser = bodyParser.urlencoded({ extended: false });
+const fetch = (...args) =>
+  import("node-fetch").then(({ default: fetch }) => fetch(...args));
 
 const app = express();
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(urlencodedParser);
 app.use(cors());
 
 app.post("/chatbot", (req, res) => {
@@ -30,10 +32,6 @@ app.post("/chatbot", (req, res) => {
     });
   }
 });
-
-app.get("/", (req, res) => res.send("Hello World!"));
-
-app.get("/health", (req, res) => res.sendStatus(200));
 
 const PORT = 3000;
 app.listen(PORT, () => {
