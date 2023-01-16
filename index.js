@@ -1,24 +1,20 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const urlencodedParser = bodyParser.urlencoded({ extended: false });
-const fetch = (...args) =>
-  import("node-fetch").then(({ default: fetch }) => fetch(...args));
-
+const axios = require("axios");
 const app = express();
 app.use(bodyParser.json());
-app.use(urlencodedParser);
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 
 app.post("/chatbot", (req, res) => {
   const message = req.body.message;
   const number = message.match(/\d+/);
   if (number) {
-    fetch(`http://numbersapi.com/${number}?type=trivia`)
-      .then((response) => response.text())
-      .then((data) => {
+    axios.get(`http://numbersapi.com/${number}?type=trivia`)
+      .then((response) => {
         res.json({
-          text: data,
+          text: response.data,
         });
       })
       .catch((error) => {
@@ -32,6 +28,10 @@ app.post("/chatbot", (req, res) => {
     });
   }
 });
+
+app.get("/", (req, res) => res.send("Hello World!"));
+
+app.get("/health", (req, res) => res.sendStatus(200));
 
 const PORT = 3000;
 app.listen(PORT, () => {
